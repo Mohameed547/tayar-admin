@@ -114,6 +114,85 @@ const ManageShipmentModal: React.FC<{
             {shipment.trackingNumber}
           </p>
 
+          {/* Proof of Delivery Details (OTP / Completed PoD) */}
+          {shipment.proofOfDelivery && (
+            <div className="mb-4 p-3 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl text-[11px] space-y-2 text-[var(--text-secondary)]">
+              {["picked_up", "in_transit", "captain_assignment", "assigned"].includes(shipment.status) && shipment.proofOfDelivery.otpCode && (
+                <div className="flex justify-between items-center">
+                  <span>{isRTL ? "رمز التحقق (OTP):" : "Verification OTP:"}</span>
+                  <span className="font-mono font-bold text-blue-500 px-2 py-0.5 bg-blue-500/10 rounded">
+                    {shipment.proofOfDelivery.otpCode}
+                  </span>
+                </div>
+              )}
+
+              {shipment.status === "delivered" && (
+                <>
+                  <div className="border-b border-[var(--border-color)] pb-1.5 font-semibold text-[var(--text-primary)] flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+                    {isRTL ? "بيانات إثبات التوصيل" : "Delivery Proof Data"}
+                  </div>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    <div>
+                      <span className="text-[10px] text-[var(--text-muted)] block">{isRTL ? "المستلم:" : "Recipient:"}</span>
+                      <span className="font-medium text-[var(--text-primary)]">{shipment.proofOfDelivery.recipientName || "N/A"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-[var(--text-muted)] block">{isRTL ? "التوقيت:" : "Verified at:"}</span>
+                      <span className="font-medium text-[var(--text-primary)]">
+                        {shipment.proofOfDelivery.verifiedAt 
+                          ? new Date(shipment.proofOfDelivery.verifiedAt).toLocaleDateString(isRTL ? "ar-EG" : "en-US", {
+                              month: "short",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit"
+                            })
+                          : "N/A"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {(shipment.proofOfDelivery.packageImage || shipment.proofOfDelivery.signatureImage) && (
+                    <div className="flex gap-2 pt-1">
+                      {shipment.proofOfDelivery.packageImage && (
+                        <div className="flex-1">
+                          <span className="text-[9px] text-[var(--text-muted)] block mb-0.5">{isRTL ? "صورة الشحنة:" : "Package:"}</span>
+                          <div className="relative h-14 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg overflow-hidden group">
+                            <img src={shipment.proofOfDelivery.packageImage} alt="Package" className="h-full w-full object-cover" />
+                            <a 
+                              href={shipment.proofOfDelivery.packageImage} 
+                              target="_blank" 
+                              rel="noreferrer" 
+                              className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center text-[8px] text-white font-bold"
+                            >
+                              {isRTL ? "عرض" : "View"}
+                            </a>
+                          </div>
+                        </div>
+                      )}
+                      {shipment.proofOfDelivery.signatureImage && (
+                        <div className="flex-1">
+                          <span className="text-[9px] text-[var(--text-muted)] block mb-0.5">{isRTL ? "التوقيع:" : "Signature:"}</span>
+                          <div className="relative h-14 bg-white border border-[var(--border-color)] rounded-lg overflow-hidden flex items-center justify-center p-0.5">
+                            <img src={shipment.proofOfDelivery.signatureImage} alt="Signature" className="h-full object-contain max-w-full" />
+                            <a 
+                              href={shipment.proofOfDelivery.signatureImage} 
+                              target="_blank" 
+                              rel="noreferrer" 
+                              className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center text-[8px] text-white font-bold"
+                            >
+                              {isRTL ? "عرض" : "View"}
+                            </a>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
           <div className="flex flex-col gap-2 mb-4">
             {actionLoading ? (
               <div className="flex justify-center py-4">

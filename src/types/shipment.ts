@@ -32,6 +32,13 @@ export interface Shipment {
   commission: number;
   createdAt: string;
   updatedAt: string;
+  proofOfDelivery?: {
+    otpCode: string | null;
+    recipientName: string | null;
+    signatureImage: string | null;
+    packageImage: string | null;
+    verifiedAt: string | null;
+  };
 }
 
 export interface ShipmentsState {

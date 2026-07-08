@@ -56,6 +56,13 @@ export const shipmentsService = {
             commission: 0,
             createdAt: s.createdAt,
             updatedAt: s.updatedAt,
+            proofOfDelivery: s.proofOfDelivery ? {
+                otpCode: s.proofOfDelivery.otpCode || null,
+                recipientName: s.proofOfDelivery.recipientName || null,
+                signatureImage: s.proofOfDelivery.signatureImage || null,
+                packageImage: s.proofOfDelivery.packageImage || null,
+                verifiedAt: s.proofOfDelivery.verifiedAt || null,
+            } : undefined,
         }));
 
         return { shipments, total: data.data.total };
@@ -101,6 +108,13 @@ export const shipmentsService = {
             commission: 0,
             createdAt: s.createdAt,
             updatedAt: s.updatedAt,
+            proofOfDelivery: s.proofOfDelivery ? {
+                otpCode: s.proofOfDelivery.otpCode || null,
+                recipientName: s.proofOfDelivery.recipientName || null,
+                signatureImage: s.proofOfDelivery.signatureImage || null,
+                packageImage: s.proofOfDelivery.packageImage || null,
+                verifiedAt: s.proofOfDelivery.verifiedAt || null,
+            } : undefined,
         };
 
         return shipment;
