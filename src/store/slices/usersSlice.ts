@@ -8,7 +8,7 @@ import { usersService } from "../../services/users.service";
 export const fetchUsers = createAsyncThunk(
     "users/fetchAll",
     async (
-        params: { page?: number; limit?: number; search?: string } = {},
+        params: { page?: number; limit?: number; search?: string; accountStatus?: string } = {},
         { rejectWithValue },
     ) => {
         try {
@@ -52,6 +52,7 @@ interface UsersState {
     actionLoading: string | null;
     error: string | null;
     search: string;
+    accountStatusFilter: string;
 }
 
 const initialState: UsersState = {
@@ -62,6 +63,7 @@ const initialState: UsersState = {
     actionLoading: null,
     error: null,
     search: "",
+    accountStatusFilter: "all",
 };
 
 // ─── Slice ────────────────────────────────────────────────────────────────────
@@ -71,6 +73,9 @@ const usersSlice = createSlice({
     reducers: {
         setSearch(state, action: PayloadAction<string>) {
             state.search = action.payload;
+        },
+        setAccountStatusFilter(state, action: PayloadAction<string>) {
+            state.accountStatusFilter = action.payload;
         },
         clearError(state) {
             state.error = null;
@@ -124,5 +129,5 @@ const usersSlice = createSlice({
     },
 });
 
-export const { setSearch, clearError } = usersSlice.actions;
+export const { setSearch, setAccountStatusFilter, clearError } = usersSlice.actions;
 export default usersSlice.reducer;
