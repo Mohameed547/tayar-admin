@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { fetchUsers, toggleUserStatus, setAccountStatusFilter } from "../../store/slices/usersSlice";
-import type { User, UserStatus } from "../../types/user";
+import type { User } from "../../types/user";
 import { StatCard } from "../../components/shared/StatCard";
 import { Badge } from "../../components/ui/Badge";
 import { Avatar } from "../../components/ui/Avatar";
 import { Spinner } from "../../components/ui/Spinner";
 import {
     Eye, Ban, RefreshCw, X, Search,
-    Users as UsersIcon, UserCheck, UserX, AlertCircle, Trash2, Clock,
+    UserCheck, UserX, AlertCircle, Trash2, Clock,
 } from "lucide-react";
 
 // ─── Status badge map ──────────────────────────────────────────────────────────
 const statusBadgeVariant = (user: User): React.ComponentProps<typeof Badge>["variant"] => {
     if (user.isDeleted) return "red";
-    if (user.accountStatus === "PENDING_DELETION") return "yellow";
+    if (user.accountStatus === "PENDING_DELETION") return "amber";
     if (user.accountStatus === "SUSPENDED" || user.status === "suspended") return "red";
     return "green";
 };
