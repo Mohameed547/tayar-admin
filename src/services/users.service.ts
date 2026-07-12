@@ -1,5 +1,5 @@
 import type { Driver } from "../types/driver";
-import type { User, UsersStats, UserStatus } from "../types/user";
+import type { User, UsersStats, UserStatus, AccountStatus } from "../types/user";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -12,6 +12,11 @@ interface BackendUser {
     email: string;
     phone: string;
     status: UserStatus;
+    accountStatus: AccountStatus;
+    isDeleted: boolean;
+    deletedAt: string | null;
+    deleteReason: string | null;
+    scheduledDeletionDate: string | null;
     orders: number;
     joined: string;
 }
@@ -37,6 +42,11 @@ const mapUser = (u: BackendUser): User => ({
     orders: u.orders,
     joined: u.joined,
     status: u.status,
+    accountStatus: u.accountStatus ?? "ACTIVE",
+    isDeleted: u.isDeleted ?? false,
+    deletedAt: u.deletedAt ?? null,
+    deleteReason: u.deleteReason ?? null,
+    scheduledDeletionDate: u.scheduledDeletionDate ?? null,
 });
 
 export const usersService = {
@@ -113,11 +123,13 @@ export const usersService = {
         page?: number;
         limit?: number;
         search?: string;
+        accountStatus?: string;
     }): Promise<GetUsersResponse> => {
         const query = new URLSearchParams();
         if (params.page) query.append("page", String(params.page));
         if (params.limit) query.append("limit", String(params.limit));
         if (params.search) query.append("search", params.search);
+        if (params.accountStatus) query.append("accountStatus", params.accountStatus);
 
         const response = await fetch(`${BASE_URL}/admin/users?${query}`, {
             headers: { Authorization: `Bearer ${getToken()}` },
